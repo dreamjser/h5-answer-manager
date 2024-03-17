@@ -1,19 +1,14 @@
 import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { ROOT_REDIRECT } from '@/common/utils/constant'
+import { useLocation } from 'react-router-dom'
 
 export default function Home() {
-  const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
     const { pathname } = location
-    if (pathname === '/') {
-      navigate(ROOT_REDIRECT, {
-        replace: true,
-      })
-    }
+
+    console.log(pathname, 'll')
   }, [location])
 
   return <Outlet />

@@ -1,8 +1,30 @@
 @import './reset.less';
 
-body{
+html, body{
+  height: 100%;
   background-color: #f6f6f6;
 }
+#app{
+  height: 100%;
+}
+.login-container{
+  height: 100%;
+  background: url(../images/bg.avif) no-repeat center;
+  background-size: cover;
+  overflow: hidden;
+  .login-wrap{
+    width: 460px;
+    padding: 30px 60px 10px;
+    margin: 180px auto 0;
+    background-color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    h2{
+      padding-bottom: 20px;
+    }
+  }
+}
+
 .btn-area{
   padding: 20px 20px 30px;
 }
