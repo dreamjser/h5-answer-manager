@@ -1,5 +1,5 @@
 module.exports = {
   NODE_ENV: '"development"',
-  BASE_URL: '"http://localhost:4002/api/"',
+  BASE_URL: '"/"',
   PUBLIC_PATH: '/',
 }

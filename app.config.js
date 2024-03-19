@@ -10,8 +10,8 @@ module.exports = {
   outputPath: 'dist',
   modulePrefix: 'inner_',
   proxyTable: {
-    '/api': {
-      target: 'http://localhost:4002',
+    '/user': {
+      target: 'http://localhost:3000',
       changeOrigin: true
     }
   },

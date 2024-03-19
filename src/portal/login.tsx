@@ -22,6 +22,19 @@ export default function Login() {
     })
   }
 
+  function onLogin() {
+    App.request({
+      url: '/user/login',
+      method: 'POST',
+      data: {
+        name: userInfo.userName,
+        pwd: userInfo.userPwd,
+      },
+    }).then((r: any) => {
+      console.log(r, '888')
+    })
+  }
+
   return (
     <div className="login-container">
       <div className="login-wrap">
@@ -41,6 +54,7 @@ export default function Login() {
             <Button
               type="primary"
               disabled={!userInfo.userName || !userInfo.userPwd}
+              onClick={onLogin}
             >
               登录
             </Button>
