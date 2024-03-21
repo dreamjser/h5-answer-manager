@@ -2,12 +2,10 @@
 const jsonServer = require('json-server')
 const path = require('path')
 const server = jsonServer.create('./')
-const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
+const routerUser = jsonServer.router(path.join(__dirname, 'user.json'))
 
-server.use(middlewares)
-server.use('/api', router)
-router.render = (req, res) => {
+function renderResponse(req, res) {
   setTimeout(() => {
     res.jsonp({
       errorCode: '0',
@@ -16,6 +14,10 @@ router.render = (req, res) => {
     })
   }, 400)
 }
+
+server.use(middlewares)
+server.use('/answer-manager-api/user', routerUser)
+routerUser.render = renderResponse
 
 server.listen(4002, () => {
   console.log('JSON Server is running')

@@ -10,8 +10,9 @@ module.exports = {
   outputPath: 'dist',
   modulePrefix: 'inner_',
   proxyTable: {
-    '/user': {
-      target: 'http://localhost:3000',
+    '/answer-manager-api/': {
+      // target: 'http://localhost:3000',
+      target: 'http://localhost:4002',
       changeOrigin: true
     }
   },

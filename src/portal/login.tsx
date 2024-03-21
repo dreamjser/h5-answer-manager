@@ -1,37 +1,44 @@
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Button, Form, Input } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { loginOpts } from '@/common/api/user'
+import { useDispatch } from 'react-redux'
+import { setUserInfo } from '@/common/store/user_info_reducer'
 
 export default function Login() {
-  const [userInfo, setUserInfo] = useState({
+  const dispatch = useDispatch()
+  const { redirectUrl } = useParams()
+  const [userForm, setUserForm] = useState<any>({
     userName: '',
     userPwd: '',
   })
 
   function onChangeUser(e: any) {
-    setUserInfo({
-      ...userInfo,
+    setUserForm({
+      ...userForm,
       userName: e.target.value,
     })
   }
 
   function onChangePwd(e: any) {
-    setUserInfo({
-      ...userInfo,
+    setUserForm({
+      ...userForm,
       userPwd: e.target.value,
     })
   }
 
   function onLogin() {
     App.request({
-      url: '/user/login',
-      method: 'POST',
+      ...loginOpts,
       data: {
-        name: userInfo.userName,
-        pwd: userInfo.userPwd,
+        name: userForm.userName,
+        pwd: userForm.userPwd,
       },
     }).then((r: any) => {
-      console.log(r, '888')
+      const url = redirectUrl ? decodeURIComponent(redirectUrl) : '/'
+      dispatch(setUserInfo(r))
+      App.router.push(url)
     })
   }
 
@@ -53,7 +60,7 @@ export default function Login() {
           <Form.Item>
             <Button
               type="primary"
-              disabled={!userInfo.userName || !userInfo.userPwd}
+              disabled={!userForm.userName || !userForm.userPwd}
               onClick={onLogin}
             >
               登录

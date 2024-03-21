@@ -11,16 +11,43 @@ html, body{
   height: 100%;
   background: url(../images/bg.avif) no-repeat center;
   background-size: cover;
-  overflow: hidden;
+  overflow: auto;
   .login-wrap{
     width: 460px;
     padding: 30px 60px 10px;
-    margin: 180px auto 0;
+    margin: 180px auto 60px;
     background-color: #fff;
     border-radius: 5px;
     text-align: center;
     h2{
       padding-bottom: 20px;
+    }
+  }
+}
+.manager-container{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .manager-header{
+    height: 120px;
+    background-color: bisque;
+  }
+  .manager-body{
+    display: flex;
+    flex: 1;
+    height: 100%;
+    .manager-menu{
+      width: 200px;
+      height: 100%;
+      padding-top: 20px;
+      overflow: auto;
+      background-color: #001529;
+    }
+    .manager-content{
+      flex: 1;
+      height: 100%;
+      background-color: aquamarine;
+      overflow: auto;
     }
   }
 }

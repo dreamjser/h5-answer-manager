@@ -25,11 +25,12 @@ export const push = (pathname: string, opts?: RouterProps) => {
   if (!checkAuth(pathname)) {
     return
   }
+
   if (!opts) {
     router.navigate(pathname)
   } else {
     if (opts.query) {
-      pathname = parseQueryString(opts.query)
+      pathname += parseQueryString(opts.query)
     }
     delete opts.query
     router.navigate(pathname, opts)
