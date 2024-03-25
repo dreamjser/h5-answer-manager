@@ -20,7 +20,7 @@ const responseHook = (reslove: any, reject: any, res: any) => {
   const { config, data } = res
   const { errorCode, errorMsg } = data
 
-  !config.slint && setTimeout(hideLoading, 100)
+  !config.slient && setTimeout(hideLoading, 100)
 
   if (errorCode !== '0') {
     if (config.publicError) {
@@ -40,8 +40,19 @@ const responseHook = (reslove: any, reject: any, res: any) => {
 const request = (opts: AllType) => {
   opts.requestHook = requestHook
   opts.responseHook = responseHook
-  return getAxios(opts, axiosInstance).catch(() => {
-    App.interface.toast('网络请求失败')
+  return new Promise((reslove, reject) => {
+    getAxios(opts, axiosInstance)
+      .then(reslove)
+      .catch(({ config, error }: any) => {
+        !config.slient && setTimeout(hideLoading, 100)
+        if (config.publicError) {
+          App.interface.toast(error.message || '请求失败')
+        } else {
+          reject({
+            errorMsg: error.message,
+          })
+        }
+      })
   })
 }
 
