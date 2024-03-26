@@ -5,6 +5,7 @@ import {
   OptionsGlobalType,
 } from '@dreamjser/request-axios'
 import { showLoading, hideLoading } from './loading'
+import { USERINFO_CACHE_KEY, getCache } from '@/common/utils/cache'
 
 const globalOpts: OptionsGlobalType = {
   timeout: 30000,
@@ -14,6 +15,13 @@ const axiosInstance = getGlobalAxios(globalOpts)
 
 const requestHook = (config: AllType) => {
   !config.slient && showLoading()
+
+  const userInfo = getCache(USERINFO_CACHE_KEY)
+  if (config.data) {
+    ;(config.data as any).token = userInfo.token
+  } else {
+    ;(config.params as any).token = userInfo.token
+  }
 }
 
 const responseHook = (reslove: any, reject: any, res: any) => {
