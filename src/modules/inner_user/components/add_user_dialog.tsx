@@ -1,14 +1,23 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react'
 import { Modal, Form, Input, Button } from 'antd'
-import { addUserOpts } from '@/common/api/user'
+import { addUserOpts, updateUserOpts } from '@/common/api/user'
 
 export default forwardRef(function AddUserDialog(props: any, ref: any) {
   const [form] = Form.useForm()
+  const [id, setId] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
 
   useImperativeHandle(ref, () => {
     return {
-      open() {
+      open(item: any) {
+        form.setFieldsValue({
+          name: item?.user_name || '',
+          pwd: '',
+          repeat: '',
+        })
+
+        setId(item?.user_id || 0)
+
         setIsOpen(true)
       },
       close() {
@@ -19,8 +28,9 @@ export default forwardRef(function AddUserDialog(props: any, ref: any) {
 
   function onSubmit(values: any) {
     App.request({
-      ...addUserOpts,
+      ...(id ? updateUserOpts : addUserOpts),
       data: {
+        id: id || '',
         name: values.name,
         pwd: values.pwd,
       },

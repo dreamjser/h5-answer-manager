@@ -1,33 +1,52 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Col, Row, Form, Input, Button, Table } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import AddUserDialog from '@/modules/inner_user/components/add_user_dialog'
+import { getUserListOpts, deleteUserOpts } from '@/common/api/user'
+import AddUserDialog from '../../components/add_user_dialog'
 
 const View = () => {
   const modal: any = useRef(null)
   const [tableData, setTableData] = useState<any>([])
+  const [formData, setFormData] = useState({
+    current: 1,
+    pageSize: 10,
+    name: '',
+  })
+  const [total, setTotal] = useState(0)
 
   function onEdit(item: any) {
-    console.log(item)
+    modal.current?.open(item)
   }
 
-  function onDel(item: any) {
-    console.log(item)
+  async function onDel(item: any) {
+    await App.interface.confirm('确定删除该用户?')
+
+    await App.request({
+      ...deleteUserOpts,
+      data: {
+        id: item.user_id,
+      },
+    })
+
+    getUserList()
   }
 
-  function onSubmit() {
-    console.log(11)
+  function getUserList() {
+    App.request({
+      ...getUserListOpts,
+      data: {
+        ...formData,
+      },
+    }).then((r: any) => {
+      const { list, total } = r
+      setTableData(list)
+      setTotal(total)
+    })
   }
 
   useEffect(() => {
-    setTableData([
-      {
-        user_id: '1001',
-        user_name: 'syg',
-        user_last_time: '2024-03-03 11:33:22',
-      },
-    ])
-  }, [])
+    getUserList()
+  }, [formData.current, formData.pageSize])
 
   const columns = [
     {
@@ -68,16 +87,27 @@ const View = () => {
   return (
     <>
       <div className="inner_user">
-        <div className="inner_user-filter">
+        <div className="inner_user-filter co-mt20">
           <Form>
             <Row>
               <Col span={5}>
                 <Form.Item label="用户名">
-                  <Input />
+                  <Input
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        name: e.target.value,
+                      })
+                    }}
+                  />
                 </Form.Item>
               </Col>
               <Col span={6} offset={1}>
-                <Button className="co-mr10" type="primary">
+                <Button
+                  className="co-mr20"
+                  type="primary"
+                  onClick={getUserList}
+                >
                   查询
                 </Button>
                 <Button
@@ -92,11 +122,19 @@ const View = () => {
             </Row>
           </Form>
         </div>
-        <div className="inner_user-tabel">
-          <Table columns={columns} dataSource={tableData} />
+        <div className="inner_user-tabel co-mt20">
+          <Table
+            pagination={{
+              current: formData.current,
+              pageSize: formData.pageSize,
+              total,
+            }}
+            columns={columns}
+            dataSource={tableData}
+          />
         </div>
       </div>
-      <AddUserDialog ref={modal} onSubmit={onSubmit} />
+      <AddUserDialog ref={modal} onSubmit={getUserList} />
     </>
   )
 }

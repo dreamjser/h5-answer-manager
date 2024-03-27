@@ -1,6 +1,10 @@
 import { ReactNode } from 'react'
 import { Modal, ModalFuncProps, message } from 'antd'
 
+type THandleCatch = {
+  handlerCatch: boolean
+}
+
 export type AlertProps = string | ModalFuncProps
 
 export const alert = (opts: AlertProps) => {
@@ -22,16 +26,17 @@ export const alert = (opts: AlertProps) => {
   })
 }
 
-export type ConfirmProps = string | ModalFuncProps
+export type ConfirmProps = string | (ModalFuncProps & THandleCatch)
 
 export const confirm = (opts: ConfirmProps) => {
   return new Promise((reslove: any, reject: any) => {
+    const handlerCatch = typeof opts === 'string' ? false : !!opts.handlerCatch
     const defaultOpts = {
       onOk: () => {
         reslove()
       },
       onCancel: () => {
-        reject && reject()
+        handlerCatch && reject()
       },
       okText: '确定',
       cancelText: '取消',
