@@ -17,7 +17,7 @@ export const updateUserOpts: AllType = {
 
 export const deleteUserOpts: AllType = {
   url: '/user/deleteUser',
-  method: 'DELETE',
+  method: 'PUT',
 }
 
 export const getUserListOpts: AllType = {

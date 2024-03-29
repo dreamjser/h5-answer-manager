@@ -28,6 +28,8 @@ const View = () => {
       },
     })
 
+    App.interface.toast('删除成功')
+
     getUserList()
   }
 

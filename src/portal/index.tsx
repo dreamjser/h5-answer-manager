@@ -6,12 +6,14 @@ import { RouterProvider } from 'react-router-dom'
 import router from './router_entry'
 import store from '@/common/store'
 import { ConfigProvider } from 'antd'
+import zhCN from 'antd/locale/zh_CN'
 import '@/common/app'
 
 const root = createRoot(document.getElementById('app') as HTMLElement)
 root.render(
   <Provider store={store}>
     <ConfigProvider
+      locale={zhCN}
       theme={{
         token: {
           colorPrimary: '#f70909',

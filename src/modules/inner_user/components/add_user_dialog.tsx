@@ -35,8 +35,10 @@ export default forwardRef(function AddUserDialog(props: any, ref: any) {
         pwd: values.pwd,
       },
     }).then(() => {
+      const msg = id ? '修改成功' : '新增成功'
       setIsOpen(false)
       props.onSubmit && props.onSubmit(values)
+      App.interface.toast(msg)
     })
   }
 
