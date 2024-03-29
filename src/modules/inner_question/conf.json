@@ -1,0 +1,17 @@
+{
+  "group": {
+    "index": {
+      "title": "题库"
+    }
+  },
+  "question": {
+    "index": {
+      "title": "题目"
+    }
+  },
+  "tags": {
+    "index": {
+      "title": "标签管理"
+    }
+  }
+}

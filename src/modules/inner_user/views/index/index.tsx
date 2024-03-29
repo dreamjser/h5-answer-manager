@@ -87,52 +87,45 @@ const View = () => {
   return (
     <>
       <div className="inner_user">
-        <div className="inner_user-filter co-mt20">
-          <Form>
-            <Row>
-              <Col span={5}>
-                <Form.Item label="用户名">
-                  <Input
-                    onChange={(e) => {
-                      setFormData({
-                        ...formData,
-                        name: e.target.value,
-                      })
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={6} offset={1}>
-                <Button
-                  className="co-mr20"
-                  type="primary"
-                  onClick={getUserList}
-                >
-                  查询
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    modal.current?.open()
+        <Form className="inner_user-filter co-mt20">
+          <Row>
+            <Col span={5}>
+              <Form.Item label="用户名">
+                <Input
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      name: e.target.value,
+                    })
                   }}
-                >
-                  新增
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </div>
-        <div className="inner_user-tabel co-mt20">
-          <Table
-            pagination={{
-              current: formData.current,
-              pageSize: formData.pageSize,
-              total,
-            }}
-            columns={columns}
-            dataSource={tableData}
-          />
-        </div>
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6} offset={1}>
+              <Button className="co-mr20" type="primary" onClick={getUserList}>
+                查询
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => {
+                  modal.current?.open()
+                }}
+              >
+                新增
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+        <Table
+          className="inner_user-tabel co-mt20"
+          pagination={{
+            current: formData.current,
+            pageSize: formData.pageSize,
+            total,
+          }}
+          columns={columns}
+          dataSource={tableData}
+        />
       </div>
       <AddUserDialog ref={modal} onSubmit={getUserList} />
     </>

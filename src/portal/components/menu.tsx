@@ -5,28 +5,43 @@ import { IMenuItem, menuList } from './menu_list'
 
 export default function AppMenu() {
   const [currentMenu, setCurrentMenu] = useState('')
+  const [openKey, setOpenKey] = useState('')
   const location = useLocation()
 
   useEffect(() => {
     const { pathname } = location
     menuList.forEach((menu: IMenuItem) => {
-      if (pathname === menu.url) {
-        setCurrentMenu(menu.key)
+      if (menu.children) {
+        menu.children.forEach((child: IMenuItem) => {
+          if (pathname === child.url) {
+            setOpenKey(menu.key)
+            setCurrentMenu(child.key)
+          }
+        })
+      } else {
+        if (pathname === menu.url) {
+          setCurrentMenu(menu.key)
+        }
       }
     })
   }, [location])
 
   function onClick(e: any) {
-    setCurrentMenu(e.key)
     App.router.push(e.item.props.url)
   }
 
   return (
-    <Menu
-      theme="dark"
-      onClick={onClick}
-      items={menuList}
-      selectedKeys={[currentMenu]}
-    ></Menu>
+    <>
+      {currentMenu && (
+        <Menu
+          theme="dark"
+          mode="inline"
+          onSelect={onClick}
+          items={menuList}
+          selectedKeys={[currentMenu]}
+          defaultOpenKeys={[openKey]}
+        ></Menu>
+      )}
+    </>
   )
 }
