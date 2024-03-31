@@ -1,8 +1,11 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react'
 import { Modal, Form, Input, Button } from 'antd'
-import { addUserOpts, updateUserOpts } from '@/common/api/user'
+import {
+  addQuestionGroupOpts,
+  updateQuestionGroupOpts,
+} from '@/common/api/question_group'
 
-export default forwardRef(function AddUserDialog(props: any, ref: any) {
+export default forwardRef(function AddGroupDialog(props: any, ref: any) {
   const [form] = Form.useForm()
   const [id, setId] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -11,12 +14,11 @@ export default forwardRef(function AddUserDialog(props: any, ref: any) {
     return {
       open(item: any) {
         form.setFieldsValue({
-          name: item?.user_name || '',
-          pwd: '',
-          repeat: '',
+          name: item?.group_name || '',
+          desc: item?.group_desc || '',
         })
 
-        setId(item?.user_id || 0)
+        setId(item?.group_id || 0)
 
         setIsOpen(true)
       },
@@ -28,11 +30,11 @@ export default forwardRef(function AddUserDialog(props: any, ref: any) {
 
   function onSubmit(values: any) {
     App.request({
-      ...(id ? updateUserOpts : addUserOpts),
+      ...(id ? updateQuestionGroupOpts : addQuestionGroupOpts),
       data: {
         id: id || '',
         name: values.name,
-        pwd: values.pwd,
+        desc: values.desc,
       },
     }).then(() => {
       const msg = id ? '修改成功' : '新增成功'
@@ -45,7 +47,7 @@ export default forwardRef(function AddUserDialog(props: any, ref: any) {
   return (
     isOpen && (
       <Modal
-        title={id ? '修改用户' : '添加用户'}
+        title={id ? '修改题库' : '添加题库'}
         open={isOpen}
         footer={null}
         onCancel={() => {
@@ -54,23 +56,15 @@ export default forwardRef(function AddUserDialog(props: any, ref: any) {
       >
         <Form
           form={form}
-          name="userForm"
           onFinish={onSubmit}
           labelCol={{ span: 4, offset: 2 }}
           wrapperCol={{ span: 14 }}
         >
-          <Form.Item name="name" label="用户名" rules={[{ required: true }]}>
-            <Input maxLength={10} />
+          <Form.Item name="name" label="题库名称" rules={[{ required: true }]}>
+            <Input maxLength={10} showCount />
           </Form.Item>
-          <Form.Item name="pwd" label="密码" rules={[{ required: true }]}>
-            <Input maxLength={20} type="password" />
-          </Form.Item>
-          <Form.Item
-            name="repeat"
-            label="确认密码"
-            rules={[{ required: true }]}
-          >
-            <Input type="password" />
+          <Form.Item name="desc" label="题库描述" rules={[{ required: true }]}>
+            <Input.TextArea maxLength={20} showCount />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 6 }}>
             <Button
