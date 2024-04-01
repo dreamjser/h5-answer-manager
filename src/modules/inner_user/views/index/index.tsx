@@ -8,11 +8,13 @@ const View = () => {
   const modal: any = useRef(null)
   const [tableData, setTableData] = useState<any>([])
   const [formData, setFormData] = useState({
-    current: 1,
-    pageSize: 10,
     name: '',
   })
-  const [total, setTotal] = useState(0)
+  const [pageData, setPageData] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  })
 
   function onEdit(item: any) {
     modal.current?.open(item)
@@ -38,17 +40,27 @@ const View = () => {
       ...getUserListOpts,
       data: {
         ...formData,
+        ...pageData,
       },
     }).then((r: any) => {
       const { list, total } = r
       setTableData(list)
-      setTotal(total)
+      setPageData({
+        ...pageData,
+        total,
+      })
+    })
+  }
+
+  function onPageChange(page: any) {
+    setPageData({
+      ...page,
     })
   }
 
   useEffect(() => {
     getUserList()
-  }, [formData.current, formData.pageSize])
+  }, [pageData.current, pageData.pageSize])
 
   const columns = [
     {
@@ -96,7 +108,6 @@ const View = () => {
                 <Input
                   onChange={(e) => {
                     setFormData({
-                      ...formData,
                       name: e.target.value,
                     })
                   }}
@@ -119,14 +130,12 @@ const View = () => {
           </Row>
         </Form>
         <Table
+          rowKey="user_id"
           className="inner_user-tabel co-mt20"
-          pagination={{
-            current: formData.current,
-            pageSize: formData.pageSize,
-            total,
-          }}
+          pagination={pageData}
           columns={columns}
           dataSource={tableData}
+          onChange={onPageChange}
         />
       </div>
       <AddUserDialog ref={modal} onSubmit={getUserList} />
