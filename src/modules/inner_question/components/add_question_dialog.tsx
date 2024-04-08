@@ -3,8 +3,6 @@ import { Modal, Form, Input, Button, Select, Radio, Checkbox } from 'antd'
 import { addQuestionOpts, updateQuestionOpts } from '@/common/api/question'
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons'
 
-let answerId = 100
-
 export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   const [form] = Form.useForm()
   const [id, setId] = useState(0)
@@ -15,7 +13,6 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
 
   function getAnswerItem() {
     return {
-      answerId: answerId++,
       answerName: '',
       isRight: false,
     }
@@ -24,12 +21,23 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   function pushAnswers(type: string, value: number) {
     if (type === '01') {
       setRightAnswers([value])
+    } else {
+      const arr = [...rightAnswers]
+      const index = arr.indexOf(value)
+      if (index >= 0) {
+        arr.splice(index, 1)
+      } else {
+        arr.push(value)
+      }
+      setRightAnswers(arr)
     }
   }
 
-  function onCheckAnswers(list: any) {
-    console.log(list, 'lll')
-    setRightAnswers(list)
+  function getAnswers() {
+    return answers.map((answer: any, index: number) => {
+      answer.isRight = rightAnswers.includes(index)
+      return { ...answer }
+    })
   }
 
   useImperativeHandle(ref, () => {
@@ -59,6 +67,7 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
         name: values.name,
         type: values.type,
         tag: values.tag,
+        answers: getAnswers(),
       },
     }).then(() => {
       const msg = id ? '修改成功' : '新增成功'
@@ -66,59 +75,6 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
       props.onSubmit && props.onSubmit(values)
       App.interface.toast(msg)
     })
-  }
-
-  function onChangeAnswer(answer: any, value: string) {
-    answer.answerName = value
-  }
-
-  function GroupWrap(props: any) {
-    const { type } = props
-    const child = answers.map((answer: any, index: number) => (
-      <div key={answer.answerId} style={{ marginBottom: '10px' }}>
-        <Input
-          style={{ width: '240px', marginRight: '10px' }}
-          onChange={(e) => {
-            onChangeAnswer(answer, e.target.value)
-          }}
-        />
-        {type === '01' && (
-          <Radio
-            className="co-mr10"
-            onChange={() => {
-              pushAnswers(type, index)
-            }}
-            value={index}
-            checked={rightAnswers.includes(index)}
-          />
-        )}
-        {type === '02' && <Checkbox className="co-mr10" value={index} />}
-        {answers.length > 1 && (
-          <MinusCircleOutlined
-            className="co-mr10"
-            onClick={() => {
-              const arr: any = [...answers]
-              arr.splice(index, 1)
-              setAnswers(arr)
-            }}
-          />
-        )}
-        {index === answers.length - 1 && (
-          <PlusCircleOutlined
-            onClick={() => {
-              setAnswers([...answers, getAnswerItem()])
-            }}
-          />
-        )}
-      </div>
-    ))
-    return type === '01' ? (
-      child
-    ) : (
-      <Checkbox.Group onChange={onCheckAnswers} value={rightAnswers}>
-        {child}
-      </Checkbox.Group>
-    )
   }
 
   return (
@@ -164,7 +120,59 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
             />
           </Form.Item>
           <Form.Item label="题目答案">
-            <GroupWrap type={form.getFieldValue('type')}></GroupWrap>
+            {answers.map((answer: any, index: number) => {
+              const type = form.getFieldValue('type')
+              return (
+                <div key={index} style={{ marginBottom: '10px' }}>
+                  <Input
+                    style={{ width: '240px', marginRight: '10px' }}
+                    value={answer.answerName}
+                    onChange={(e) => {
+                      const arr = [...answers]
+                      arr[index].answerName = e.target.value
+                      setAnswers(arr)
+                    }}
+                  />
+                  {type === '01' && (
+                    <Radio
+                      className="co-mr10"
+                      onChange={() => {
+                        pushAnswers(type, index)
+                      }}
+                      value={index}
+                      checked={rightAnswers.includes(index)}
+                    />
+                  )}
+                  {type === '02' && (
+                    <Checkbox
+                      className="co-mr10"
+                      onChange={() => {
+                        pushAnswers(type, index)
+                      }}
+                      value={index}
+                      checked={rightAnswers.includes(index)}
+                    />
+                  )}
+                  {answers.length > 1 && (
+                    <MinusCircleOutlined
+                      className="co-mr10"
+                      onClick={() => {
+                        const arr: any = [...answers]
+                        arr.splice(index, 1)
+                        setAnswers(arr)
+                      }}
+                    />
+                  )}
+                  {index === answers.length - 1 && (
+                    <PlusCircleOutlined
+                      onClick={() => {
+                        setAnswers([...answers, getAnswerItem()])
+                      }}
+                    />
+                  )}
+                </div>
+              )
+            })}
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 6 }}>
             <Button
