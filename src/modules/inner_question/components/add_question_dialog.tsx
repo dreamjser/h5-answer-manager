@@ -9,6 +9,10 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   const [type, setType] = useState('01')
   const [answers, setAnswers] = useState([getAnswerItem()])
   const [rightAnswers, setRightAnswers] = useState<any>([])
+  const [answerError, setAnswerError] = useState<any>({
+    help: '',
+    status: '',
+  })
   const [isOpen, setIsOpen] = useState(false)
 
   function getAnswerItem() {
@@ -60,6 +64,26 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   })
 
   function onSubmit(values: any) {
+    if (answers.some((answer: any) => !answer.answerName)) {
+      setAnswerError({
+        status: 'error',
+        help: '有未填写答案选项，请填写',
+      })
+      return
+    }
+    if (rightAnswers.length === 0) {
+      setAnswerError({
+        status: 'error',
+        help: '未设置正确答案',
+      })
+      return
+    }
+
+    setAnswerError({
+      status: '',
+      help: '',
+    })
+
     App.request({
       ...(id ? updateQuestionOpts : addQuestionOpts),
       data: {
@@ -119,13 +143,26 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
               ]}
             />
           </Form.Item>
-          <Form.Item label="题目答案">
+          <Form.Item
+            label="题目答案"
+            required
+            validateStatus={answerError.status}
+            help={answerError.help}
+          >
             {answers.map((answer: any, index: number) => {
               const type = form.getFieldValue('type')
               return (
-                <div key={index} style={{ marginBottom: '10px' }}>
+                <div
+                  key={index}
+                  style={{
+                    marginBottom: index === answers.length - 1 ? '0' : '10px',
+                  }}
+                >
                   <Input
-                    style={{ width: '240px', marginRight: '10px' }}
+                    style={{
+                      width: '240px',
+                      marginRight: '10px',
+                    }}
                     value={answer.answerName}
                     onChange={(e) => {
                       const arr = [...answers]

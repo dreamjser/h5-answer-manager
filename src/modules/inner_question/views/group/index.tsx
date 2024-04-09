@@ -114,6 +114,7 @@ const View = () => {
             <Col span={5}>
               <Form.Item label="题库名">
                 <Input
+                  placeholder="支持模糊查询"
                   onChange={(e) => {
                     setFormData({
                       name: e.target.value,
@@ -138,7 +139,7 @@ const View = () => {
           </Row>
         </Form>
         <Table
-          rowKey="group_id"
+          rowKey="question_id"
           className="inner_user-tabel co-mt20"
           pagination={pageData}
           columns={columns}

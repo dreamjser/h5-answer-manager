@@ -84,6 +84,23 @@ const View = () => {
       key: 'tag_name',
     },
     {
+      title: '题目答案',
+      dataIndex: 'answers',
+      key: 'answers',
+      render(_: any, record: any) {
+        const answerRights = record.answer_rights.split('|')
+        return record.answer_options
+          .split('|')
+          .map((option: any, index: number) => (
+            <div key={index}>
+              {option}
+              &nbsp;
+              {answerRights[index] == 1 ? '✅' : ''}
+            </div>
+          ))
+      },
+    },
+    {
       title: '操作',
       key: 'action',
       render: (_: any, record: any) => (
@@ -111,6 +128,7 @@ const View = () => {
             <Col span={5}>
               <Form.Item label="题目名">
                 <Input
+                  placeholder="支持模糊查询"
                   onChange={(e) => {
                     setFormData({
                       name: e.target.value,

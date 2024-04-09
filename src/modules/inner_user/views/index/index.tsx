@@ -106,6 +106,7 @@ const View = () => {
             <Col span={5}>
               <Form.Item label="用户名">
                 <Input
+                  placeholder="支持模糊查询"
                   onChange={(e) => {
                     setFormData({
                       name: e.target.value,
