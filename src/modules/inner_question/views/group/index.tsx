@@ -35,10 +35,10 @@ const View = () => {
 
     App.interface.toast('删除成功')
 
-    getUserList()
+    getGroupList()
   }
 
-  function getUserList() {
+  function getGroupList() {
     App.request({
       ...getQuestionGroupListOpts,
       data: formData,
@@ -59,7 +59,7 @@ const View = () => {
   }
 
   useEffect(() => {
-    getUserList()
+    getGroupList()
   }, [pageData.current, pageData.pageSize])
 
   const columns = [
@@ -124,7 +124,7 @@ const View = () => {
               </Form.Item>
             </Col>
             <Col span={6} offset={1}>
-              <Button className="co-mr20" type="primary" onClick={getUserList}>
+              <Button className="co-mr20" type="primary" onClick={getGroupList}>
                 查询
               </Button>
               <Button
@@ -139,7 +139,7 @@ const View = () => {
           </Row>
         </Form>
         <Table
-          rowKey="question_id"
+          rowKey="group_id"
           className="inner_user-tabel co-mt20"
           pagination={pageData}
           columns={columns}
@@ -147,7 +147,7 @@ const View = () => {
           onChange={onPageChange}
         />
       </div>
-      <AddGroupDialog ref={modal} onSubmit={getUserList} />
+      <AddGroupDialog ref={modal} onSubmit={getGroupList} />
     </>
   )
 }
