@@ -1,7 +1,13 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react'
+import React, {
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  useEffect,
+} from 'react'
 import { Modal, Form, Input, Button, Select, Radio, Checkbox } from 'antd'
-import { addQuestionOpts, updateQuestionOpts } from '@/common/api/question'
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { addQuestionOpts, updateQuestionOpts } from '@/common/api/question'
+import { getTagListOpts } from '@/common/api/tag'
 
 export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   const [form] = Form.useForm()
@@ -9,6 +15,7 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   const [type, setType] = useState('01')
   const [answers, setAnswers] = useState([getAnswerItem()])
   const [rightAnswers, setRightAnswers] = useState<any>([])
+  const [tagList, setTagList] = useState<any>([])
   const [answerError, setAnswerError] = useState<any>({
     help: '',
     status: '',
@@ -44,13 +51,21 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
     })
   }
 
+  useEffect(() => {
+    App.request({
+      ...getTagListOpts,
+    }).then((r: any) => {
+      setTagList(r)
+    })
+  }, [])
+
   useImperativeHandle(ref, () => {
     return {
       open(item: any) {
         form.setFieldsValue({
           name: item?.question_name || '',
           type: item?.question_type || '01',
-          tag: item?.question_tag || '',
+          tag: item?.question_tag || [],
         })
 
         setId(item?.question_id || 0)
@@ -137,10 +152,12 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
           <Form.Item name="tag" label="题目标签">
             <Select
               placeholder="请选择"
-              options={[
-                { value: '01', label: '单选题' },
-                { value: '02', label: '多选题' },
-              ]}
+              mode="multiple"
+              allowClear
+              options={tagList.map((tag: any) => ({
+                label: tag.tag_name,
+                value: tag.tag_id,
+              }))}
             />
           </Form.Item>
           <Form.Item
