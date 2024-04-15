@@ -18,8 +18,19 @@ export const userInfoSlice = createSlice({
       state.info = info
       localStorage.setItem(CACHE_KEY, JSON.stringify(info))
     },
+    removeUserInfo: (state: any) => {
+      state.info = null
+      localStorage.removeItem(CACHE_KEY)
+      App.router.push('/login', {
+        query: {
+          redirectUrl: encodeURIComponent(location.pathname),
+        },
+        replace: true,
+      })
+    },
   },
 })
-export const { setUserInfo, getUserInfo } = userInfoSlice.actions
+export const { setUserInfo, getUserInfo, removeUserInfo } =
+  userInfoSlice.actions
 
 export default userInfoSlice.reducer
