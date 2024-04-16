@@ -7,6 +7,7 @@ import {
 import { showLoading, hideLoading } from './loading'
 import store from '@/common/store'
 import { removeUserInfo } from '@/common/store/user_info_reducer'
+import { USERINFO_CACHE_KEY, getCache } from '@/common/utils/cache'
 
 const globalOpts: OptionsGlobalType = {
   timeout: 30000,
@@ -16,8 +17,7 @@ const axiosInstance = getGlobalAxios(globalOpts)
 
 const requestHook = (config: AllType) => {
   !config.slient && showLoading()
-  const state = store.getState()
-  const userInfo = state.userInfo.info || {}
+  const userInfo = getCache(USERINFO_CACHE_KEY) || {}
 
   if (config.data) {
     ;(config.data as any).token = userInfo.token
@@ -57,7 +57,9 @@ const request = (opts: AllType) => {
         !config.slient && setTimeout(hideLoading, 100)
 
         if (error.response.status === 403) {
-          store.dispatch(removeUserInfo())
+          App.interface.alert('登录超时，请重新登录').then(() => {
+            store.dispatch(removeUserInfo())
+          })
           return
         }
         if (config.publicError) {

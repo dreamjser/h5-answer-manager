@@ -1,5 +1,5 @@
 import routers from '@tmp/routers'
-import store from '@/common/store'
+import { USERINFO_CACHE_KEY, getCache } from '@/common/utils/cache'
 
 const getAuthInfo = (pathname: string) => {
   const routerMaps: any = {}
@@ -14,8 +14,7 @@ const getAuthInfo = (pathname: string) => {
 
 export const checkAuth = (pathname: string) => {
   const authInfo = getAuthInfo(pathname)
-  const state = store.getState()
-  const userInfo = state.userInfo.info || {}
+  const userInfo = getCache(USERINFO_CACHE_KEY)
 
   if (authInfo && authInfo.needLogin !== false && !userInfo) {
     App.router.push('/login', {

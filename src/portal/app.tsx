@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import store from '@/common/store'
-import { useLoginInfo } from '@/common/hooks/use_login_info'
+import { USERINFO_CACHE_KEY, getCache } from '@/common/utils/cache'
 import { ROOT_REDIRECT } from '@/common/utils/constant'
 import AppMenu from './components/menu'
 
 export default function Home() {
   const location = useLocation()
-  const info = useLoginInfo()
 
   useEffect(() => {
     const { pathname } = location
-    const state = store.getState()
-    const userInfo = state.userInfo.info
+    const userInfo = getCache(USERINFO_CACHE_KEY)
 
     if (pathname === '/') {
       App.router.push(ROOT_REDIRECT)
@@ -32,7 +29,9 @@ export default function Home() {
         <div className="manager-menu">
           <AppMenu />
         </div>
-        <div className="manager-content">{info && <Outlet />}</div>
+        <div className="manager-content">
+          <Outlet />
+        </div>
       </div>
     </div>
   )
