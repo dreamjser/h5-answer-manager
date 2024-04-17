@@ -38,7 +38,10 @@ const View = () => {
   function getQuestionList() {
     App.request({
       ...getQuestionListOpts,
-      data: formData,
+      data: {
+        ...formData,
+        ...pageData,
+      },
     }).then((r: any) => {
       const { list, total } = r
       setTableData(list)

@@ -41,7 +41,10 @@ const View = () => {
   function getGroupList() {
     App.request({
       ...getQuestionGroupListOpts,
-      data: formData,
+      data: {
+        ...formData,
+        ...pageData,
+      },
     }).then((r: any) => {
       const { list, total } = r
       setTableData(list)
