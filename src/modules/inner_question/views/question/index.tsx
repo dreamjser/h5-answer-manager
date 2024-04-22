@@ -52,6 +52,17 @@ const View = () => {
     })
   }
 
+  function onSearch() {
+    if (pageData.current === 1) {
+      getQuestionList()
+    } else {
+      setPageData({
+        ...pageData,
+        current: 1,
+      })
+    }
+  }
+
   function onPageChange(page: any) {
     setPageData({
       ...page,
@@ -141,11 +152,7 @@ const View = () => {
               </Form.Item>
             </Col>
             <Col span={6} offset={1}>
-              <Button
-                className="co-mr20"
-                type="primary"
-                onClick={getQuestionList}
-              >
+              <Button className="co-mr20" type="primary" onClick={onSearch}>
                 查询
               </Button>
               <Button
