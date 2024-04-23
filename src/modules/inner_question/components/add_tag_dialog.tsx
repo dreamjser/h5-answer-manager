@@ -14,7 +14,7 @@ export default forwardRef(function AddTagDialog(props: any, ref: any) {
           name: item?.tag_name || '',
         })
 
-        setId(item?.tag_id || 0)
+        setId(item?.id || 0)
 
         setIsOpen(true)
       },

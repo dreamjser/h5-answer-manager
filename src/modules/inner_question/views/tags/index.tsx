@@ -21,7 +21,7 @@ const View = () => {
     await App.request({
       ...deleteTagOpts,
       data: {
-        id: item.tag_id,
+        id: item.id,
       },
     })
 
@@ -46,8 +46,8 @@ const View = () => {
   const columns = [
     {
       title: '标签id',
-      dataIndex: 'tag_id',
-      key: 'tag_id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: '标签名',
@@ -107,7 +107,7 @@ const View = () => {
           </Row>
         </Form>
         <Table
-          rowKey="tag_id"
+          rowKey="id"
           className="inner_user-tabel co-mt20"
           columns={columns}
           pagination={false}

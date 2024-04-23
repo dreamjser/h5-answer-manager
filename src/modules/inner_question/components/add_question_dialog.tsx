@@ -68,7 +68,7 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
           tag: item?.question_tag || [],
         })
 
-        setId(item?.question_id || 0)
+        setId(item?.id || 0)
 
         setIsOpen(true)
       },
@@ -156,7 +156,7 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
               allowClear
               options={tagList.map((tag: any) => ({
                 label: tag.tag_name,
-                value: tag.tag_id,
+                value: tag.id,
               }))}
             />
           </Form.Item>

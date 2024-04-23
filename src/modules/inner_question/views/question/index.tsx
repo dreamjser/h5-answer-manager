@@ -26,7 +26,7 @@ const View = () => {
     await App.request({
       ...deleteQuestionOpts,
       data: {
-        id: item.question_id,
+        id: item.id,
       },
     })
 
@@ -76,8 +76,8 @@ const View = () => {
   const columns = [
     {
       title: '题目id',
-      dataIndex: 'question_id',
-      key: 'question_id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: '题目名',
@@ -96,6 +96,9 @@ const View = () => {
       title: '题目标签',
       dataIndex: 'tag_name',
       key: 'tag_name',
+      render(_: any, record: any) {
+        return record.tags.map((tag: any) => tag.tag_name).join(';')
+      },
     },
     {
       title: '题目答案',
@@ -167,7 +170,7 @@ const View = () => {
           </Row>
         </Form>
         <Table
-          rowKey="question_id"
+          rowKey="id"
           className="inner_user-tabel co-mt20"
           pagination={pageData}
           columns={columns}
