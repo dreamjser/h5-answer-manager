@@ -62,14 +62,29 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   useImperativeHandle(ref, () => {
     return {
       open(item: any) {
+        const rightIndexArr: any = []
+        const rightAnswersArr = item.answer_rights.split('|')
+        const answersArr = item.answer_options.split('|')
+        const answersData = answersArr.map((answer: any, index: number) => {
+          const isRight = rightAnswersArr[index] === '1'
+          if (isRight) {
+            rightIndexArr.push(index)
+          }
+          return {
+            answerName: answer,
+            isRight,
+          }
+        })
+
         form.setFieldsValue({
           name: item?.question_name || '',
           type: item?.question_type || '01',
-          tag: item?.question_tag || [],
+          tag: item?.tags.map((tag: any) => tag.id) || [],
         })
 
         setId(item?.id || 0)
-
+        setAnswers(answersData)
+        setRightAnswers(rightIndexArr)
         setIsOpen(true)
       },
       close() {
