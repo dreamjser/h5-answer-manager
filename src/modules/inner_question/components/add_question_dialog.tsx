@@ -62,6 +62,11 @@ export default forwardRef(function AddQuestionDialog(props: any, ref: any) {
   useImperativeHandle(ref, () => {
     return {
       open(item: any) {
+        if (!item) {
+          setIsOpen(true)
+          setAnswers([getAnswerItem()])
+          return
+        }
         const rightIndexArr: any = []
         const rightAnswersArr = item.answer_rights.split('|')
         const answersArr = item.answer_options.split('|')
