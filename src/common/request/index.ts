@@ -1,76 +1,83 @@
 import {
-  getGlobalAxios,
-  getAxios,
-  AllType,
-  OptionsGlobalType,
-} from '@dreamjser/request-axios'
+  HttpClient,
+  RequestConfig,
+  ResponseConfig,
+} from '@dreamjser/http-client'
 import { showLoading, hideLoading } from './loading'
 import store from '@/common/store'
 import { removeUserInfo } from '@/common/store/user_info_reducer'
 import { USERINFO_CACHE_KEY, getCache } from '@/common/utils/cache'
 
-const globalOpts: OptionsGlobalType = {
-  timeout: 30000,
+interface CustomRequestConfig extends RequestConfig {
+  loading?: boolean
+  hasOwnError?: boolean
+}
+
+const client = new HttpClient({
   baseURL: GLOBAL_CONFIG.BASE_URL,
-}
-const axiosInstance = getGlobalAxios(globalOpts)
+  timeout: 5000,
+  withCredentials: true,
+})
 
-const requestHook = (config: AllType) => {
-  !config.slient && showLoading()
-  const userInfo = getCache(USERINFO_CACHE_KEY) || {}
-
-  if (config.data) {
-    ;(config.data as any).token = userInfo.token
-  } else {
-    ;(config.params as any).token = userInfo.token
-  }
-}
-
-const responseHook = (reslove: any, reject: any, res: any) => {
-  const { config, data } = res
-  const { errorCode, errorMsg } = data
-
-  !config.slient && setTimeout(hideLoading, 100)
-
-  if (errorCode !== '0') {
-    if (config.publicError) {
-      App.interface.toast(errorMsg)
-    } else {
-      reject({
-        errorCode,
-        errorMsg,
-      })
+client.useRequestInterceptor({
+  onRequest: (config: CustomRequestConfig) => {
+    const userInfo = getCache(USERINFO_CACHE_KEY) || {}
+    const conf = {
+      loading: true,
+      hasOwnError: false,
+      ...config,
     }
-    return
-  }
 
-  reslove(data.data)
-}
+    if (conf.data) {
+      conf.data = {
+        ...conf.data,
+        token: userInfo.token || '',
+      }
+    }
 
-const request = (opts: AllType) => {
-  opts.requestHook = requestHook
-  opts.responseHook = responseHook
-  return new Promise((reslove, reject) => {
-    getAxios(opts, axiosInstance)
-      .then(reslove)
-      .catch(({ config, error }: any) => {
-        !config.slient && setTimeout(hideLoading, 100)
+    if (conf.loading) {
+      showLoading()
+    }
 
-        if (error.response.status === 403) {
-          App.interface.alert('登录超时，请重新登录').then(() => {
-            store.dispatch(removeUserInfo())
-          })
-          return
-        }
-        if (config.publicError) {
-          App.interface.toast(error.message || '请求失败')
-        } else {
-          reject({
-            errorMsg: error.message,
-          })
-        }
+    return conf
+  },
+})
+
+client.useResponseInterceptor({
+  onResponse: (responseConfig: ResponseConfig) => {
+    const { config, response, resolve, reject } = responseConfig
+    const { errorCode, errorMsg, data } =
+      (response as Record<string, any>).data || {}
+
+    if ((config as CustomRequestConfig).loading) {
+      setTimeout(hideLoading, 50)
+    }
+
+    if (response.status === 403) {
+      App.interface.alert('登录超时，请重新登录').then(() => {
+        store.dispatch(removeUserInfo())
       })
-  })
-}
+      return
+    }
 
-export default request
+    if (errorCode !== '0') {
+      if (!(config as CustomRequestConfig).hasOwnError) {
+        App.interface.toast(errorMsg)
+      } else {
+        reject({ errorCode, errorMsg, data })
+      }
+      return
+    }
+
+    resolve(data)
+    return data
+  },
+  onResponseError: (error: Error) => {
+    console.log(error, ';;;')
+    return error
+  },
+})
+
+export default (config: CustomRequestConfig) => {
+  return client.request(config)
+}
