@@ -73,7 +73,8 @@ client.useResponseInterceptor({
     return data
   },
   onResponseError: (error: Error) => {
-    console.log(error, ';;;')
+    App.interface.toast('网络请求失败')
+    setTimeout(hideLoading, 50)
     return error
   },
 })
