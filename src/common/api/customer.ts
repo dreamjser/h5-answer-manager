@@ -1,21 +1,21 @@
-import { AllType } from '@dreamjser/request-axios'
+import { CustomRequestConfig } from '../request'
 
-export const getCustomerListOpts: AllType = {
+export const getCustomerListOpts: CustomRequestConfig = {
   url: '/customer/getCustomerList',
-  method: 'GET' as const,
+  method: 'GET',
 }
 
-export const addCustomerOpts: AllType = {
+export const addCustomerOpts: CustomRequestConfig = {
   url: '/customer/addCustomer',
-  method: 'POST' as const,
+  method: 'POST',
 }
 
-export const updateCustomerOpts: AllType = {
+export const updateCustomerOpts: CustomRequestConfig = {
   url: '/customer/updateCustomer',
-  method: 'POST' as const,
+  method: 'POST',
 }
 
-export const deleteCustomerOpts: AllType = {
+export const deleteCustomerOpts: CustomRequestConfig = {
   url: '/customer/deleteCustomer',
-  method: 'POST' as const,
+  method: 'POST',
 }

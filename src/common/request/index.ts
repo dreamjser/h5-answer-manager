@@ -8,7 +8,7 @@ import store from '@/common/store'
 import { removeUserInfo } from '@/common/store/user_info_reducer'
 import { USERINFO_CACHE_KEY, getCache } from '@/common/utils/cache'
 
-interface CustomRequestConfig extends RequestConfig {
+export interface CustomRequestConfig extends RequestConfig {
   loading?: boolean
   hasOwnError?: boolean
 }

@@ -1,21 +1,21 @@
-import { AllType } from '@dreamjser/request-axios'
+import { CustomRequestConfig } from '../request'
 
-export const addTagOpts: AllType = {
+export const addTagOpts: CustomRequestConfig = {
   url: '/tag/addTag',
   method: 'POST',
 }
 
-export const updateTagOpts: AllType = {
+export const updateTagOpts: CustomRequestConfig = {
   url: '/tag/updateTag',
   method: 'PUT',
 }
 
-export const deleteTagOpts: AllType = {
+export const deleteTagOpts: CustomRequestConfig = {
   url: '/tag/deleteTag',
   method: 'PUT',
 }
 
-export const getTagListOpts: AllType = {
+export const getTagListOpts: CustomRequestConfig = {
   url: '/tag/getTagList',
   method: 'GET',
 }

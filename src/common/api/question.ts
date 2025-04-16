@@ -1,21 +1,21 @@
-import { AllType } from '@dreamjser/request-axios'
+import { CustomRequestConfig } from '../request'
 
-export const addQuestionOpts: AllType = {
+export const addQuestionOpts: CustomRequestConfig = {
   url: '/question/addQuestion',
   method: 'POST',
 }
 
-export const updateQuestionOpts: AllType = {
+export const updateQuestionOpts: CustomRequestConfig = {
   url: '/question/updateQuestion',
   method: 'PUT',
 }
 
-export const deleteQuestionOpts: AllType = {
+export const deleteQuestionOpts: CustomRequestConfig = {
   url: '/question/deleteQuestion',
   method: 'PUT',
 }
 
-export const getQuestionListOpts: AllType = {
+export const getQuestionListOpts: CustomRequestConfig = {
   url: '/question/getQuestionList',
   method: 'GET',
 }
